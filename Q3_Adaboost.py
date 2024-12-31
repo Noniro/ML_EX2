@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from itertools import combinations
 
+
+
 def split_data_versicolor_virginica(file_path):
     data = []
     labels = []
@@ -46,7 +48,7 @@ def adaboost(X_train, y_train, hypotheses, n_classifiers=8):
     classifiers = []
     alphas = []
 
-    for _ in range(n_classifiers):
+    for t in range(n_classifiers):
         min_error = float('inf')
         best_classifier = None
         best_alpha = 0
@@ -66,6 +68,13 @@ def adaboost(X_train, y_train, hypotheses, n_classifiers=8):
         predictions = hypothesis_predict(best_classifier[0], best_classifier[1], X_train)
         weights *= np.exp(-best_alpha * y_train * predictions)
         weights /= np.sum(weights)
+
+        # Debug prints
+        # print(f"Classifier {t+1}:")
+        # print(f"  Weights: {weights}")
+        # print(f"  Alpha: {best_alpha}")
+        # print(f"  Error: {min_error}")
+        # print(f"  Classifier: {best_classifier}")
 
     return classifiers, alphas
 
@@ -96,6 +105,8 @@ def run_experiment(file_path, n_runs=100, n_classifiers=8):
     avg_test_errors /= n_runs
 
     return avg_train_errors, avg_test_errors
+
+
 
 if __name__ == "__main__":
     file_path = 'iris.txt'
