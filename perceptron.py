@@ -3,7 +3,39 @@
 # Y - axis is the third feature
 
 import numpy as np
+from itertools import combinations
 
+def calculate_max_margin_brute_force(data, labels):
+    max_margin = 0
+    best_weights = None
+    best_bias = None
+
+    # Generate all combinations of 2 points from different classes
+    for i, j in combinations(range(len(data)), 2):
+        if labels[i] == labels[j]:
+            continue
+
+        # Calculate the line (weights and bias) that separates the two points
+        point1, point2 = data[i], data[j]
+        weights = point2 - point1
+        bias = -np.dot(weights, (point1 + point2) / 2)
+
+        # Calculate the margin for all points
+        margins = []
+        for k in range(len(data)):
+            margin = abs(np.dot(weights, data[k]) + bias) / np.linalg.norm(weights)
+            margins.append(margin)
+
+        # The margin is the minimum distance to the decision boundary
+        margin = min(margins)
+
+        # Update the maximum margin if necessary
+        if margin > max_margin:
+            max_margin = margin
+            best_weights = weights
+            best_bias = bias
+
+    return max_margin, best_weights, best_bias
 
 # Load the dataset for Setosa and Versicolor
 def load_data_setosa_versicolor(file_path):
@@ -69,6 +101,14 @@ class Perceptron:
 
 # Main function to run the Perceptron algorithm
 if __name__ == "__main__":
+    # Function to calculate the Perceptron margin
+    def calculate_perceptron_margin(X, y, weights, bias):
+        margins = []
+        for i in range(len(X)):
+            margin = (np.dot(weights, X[i]) + bias) / np.linalg.norm(weights)
+            margins.append(margin)
+        return min(margins)
+
     # Run Perceptron on Setosa and Versicolor
     X_sv, y_sv = load_data_setosa_versicolor('iris.txt')
     perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
@@ -79,8 +119,10 @@ if __name__ == "__main__":
     print("Final weights vector:", perceptron_sv.weights)
     print("Final bias:", perceptron_sv.bias)
     print("Number of mistakes:", perceptron_sv.mistakes)
-    margin_sv = 1 / np.linalg.norm(perceptron_sv.weights)
-    print("True maximum margin:", margin_sv)
+    true_max_margin_sv, _, _ = calculate_max_margin_brute_force(X_sv, y_sv)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias)
+    print("True maximum margin:", true_max_margin_sv)
+    print("Perceptron margin:", perceptron_margin_sv)
 
     # Run Perceptron on Setosa and Virginica
     X_sv, y_sv = load_data_setosa_virginica('iris.txt')
@@ -92,5 +134,7 @@ if __name__ == "__main__":
     print("Final weights vector:", perceptron_sv.weights)
     print("Final bias:", perceptron_sv.bias)
     print("Number of mistakes:", perceptron_sv.mistakes)
-    margin_sv = 1 / np.linalg.norm(perceptron_sv.weights)
-    print("True maximum margin:", margin_sv)
+    true_max_margin_sv, _, _ = calculate_max_margin_brute_force(X_sv, y_sv)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias)
+    print("True maximum margin:", true_max_margin_sv)
+    print("Perceptron margin:", perceptron_margin_sv)
