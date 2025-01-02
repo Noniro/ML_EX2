@@ -5,7 +5,7 @@ from perceptron import load_data_setosa_versicolor, Perceptron, calculate_max_ma
 from Q3_Adaboost import split_data_versicolor_virginica, generate_hypothesis_set, adaboost, hypothesis_predict
 
 
-def plot_perceptron_decision_boundary(X, y, weights, bias, title):
+def plot_perceptron_decision_boundary(X, y, weights, title):
     # Plot the data points
     for i, point in enumerate(X):
         if y[i] == 1:
@@ -15,7 +15,7 @@ def plot_perceptron_decision_boundary(X, y, weights, bias, title):
 
     # Plot the decision boundary
     x_values = np.linspace(min(X[:, 0]), max(X[:, 0]), 100)
-    y_values = -(weights[0] * x_values + bias) / weights[1]
+    y_values = -(weights[0] * x_values) / weights[1]
     plt.plot(x_values, y_values, label='Decision Boundary', color='green')
 
     plt.xlabel('Feature 2')
@@ -32,7 +32,8 @@ def plot_decision_boundary(classifiers, alphas, X, y, title):
                          np.arange(y_min, y_max, 0.01))
     Z = np.zeros(xx.shape)
     for i in range(len(classifiers)):
-        Z += alphas[i] * hypothesis_predict(classifiers[i][0], classifiers[i][1], np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+        Z += alphas[i] * hypothesis_predict(classifiers[i][0], classifiers[i][1],
+                                            np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
     Z = np.sign(Z)
     Z = Z.reshape(xx.shape)
     plt.contourf(xx, yy, Z, alpha=0.8)
@@ -48,27 +49,27 @@ if __name__ == "__main__":
     if choice == '1':
         # Example usage with Setosa and Versicolor
         X_sv, y_sv = load_data_setosa_versicolor('iris.txt')
-        perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
+        perceptron_sv = Perceptron(n_iters=1000)
         perceptron_sv.fit(X_sv, y_sv)
 
         # Plot Perceptron decision boundary
-        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias, "Perceptron Decision Boundary")
+        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, "Perceptron Decision Boundary")
 
         # Calculate and plot true maximum margin decision boundary
-        true_max_margin_sv, true_weights, true_bias = calculate_max_margin_brute_force(X_sv, y_sv)
-        plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, true_bias, "True Maximum Margin Decision Boundary")
+        true_max_margin_sv, true_weights = calculate_max_margin_brute_force(X_sv, y_sv)
+        plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, "True Maximum Margin Decision Boundary")
 
         # Example usage with Setosa and Virginica
         X_sv, y_sv = load_data_setosa_virginica('iris.txt')
-        perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
+        perceptron_sv = Perceptron(n_iters=1000)
         perceptron_sv.fit(X_sv, y_sv)
 
         # Plot Perceptron decision boundary
-        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias, "Perceptron Decision Boundary")
+        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, "Perceptron Decision Boundary")
 
         # Calculate and plot true maximum margin decision boundary
-        true_max_margin_sv, true_weights, true_bias = calculate_max_margin_brute_force(X_sv, y_sv)
-        plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, true_bias, "True Maximum Margin Decision Boundary")
+        true_max_margin_sv, true_weights = calculate_max_margin_brute_force(X_sv, y_sv)
+        plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, "True Maximum Margin Decision Boundary")
     elif choice == '2':
         X_train, X_test, y_train, y_test = split_data_versicolor_virginica('iris.txt')
         hypotheses = generate_hypothesis_set(X_train, y_train)
