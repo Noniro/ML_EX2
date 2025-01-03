@@ -37,8 +37,8 @@ def calculate_max_margin_brute_force(data, labels):
 
     return max_margin, best_weights, best_bias
 
-# Load the dataset for Setosa and Versicolor
-def load_data_setosa_versicolor(file_path):
+# Load the dataset for two classes
+def load_data_setosa_versicolor(file_path,class1,class2):
     data = []
     labels = []
     with open(file_path, 'r') as file:
@@ -46,16 +46,16 @@ def load_data_setosa_versicolor(file_path):
             parts = line.strip().split()
             if len(parts) < 5:
                 continue
-            if parts[4] == 'Iris-virginica':
+            if parts[4] == class1:
                 continue
             features = list(map(float, parts[1:3]))  # Use only the second and third features
-            label = 1 if parts[4] == 'Iris-setosa' else -1
+            label = 1 if parts[4] == class2 else -1
             data.append(features)
             labels.append(label)
     return np.array(data), np.array(labels)
 
-# Load the dataset for Setosa and Virginica
-def load_data_setosa_virginica(file_path):
+
+def load_data_from_2_classes(file_path, class1, class2):
     data = []
     labels = []
     with open(file_path, 'r') as file:
@@ -63,10 +63,10 @@ def load_data_setosa_virginica(file_path):
             parts = line.strip().split()
             if len(parts) < 5:
                 continue
-            if parts[4] == 'Iris-versicolor':
+            if parts[4] not in [class1, class2]:
                 continue
             features = list(map(float, parts[1:3]))  # Use only the second and third features
-            label = 1 if parts[4] == 'Iris-setosa' else -1
+            label = 1 if parts[4] == class1 else -1
             data.append(features)
             labels.append(label)
     return np.array(data), np.array(labels)
@@ -105,12 +105,12 @@ if __name__ == "__main__":
     def calculate_perceptron_margin(X, y, weights, bias):
         margins = []
         for i in range(len(X)):
-            margin = (np.dot(weights, X[i]) + bias) / np.linalg.norm(weights)
+            margin = y[i] * (np.dot(weights, X[i]) + bias) / np.linalg.norm(weights)
             margins.append(margin)
         return min(margins)
 
     # Run Perceptron on Setosa and Versicolor
-    X_sv, y_sv = load_data_setosa_versicolor('iris.txt')
+    X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-versicolor')
     perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
     perceptron_sv.fit(X_sv, y_sv)
     predictions_sv = perceptron_sv.predict(X_sv)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     print("Perceptron margin:", perceptron_margin_sv)
 
     # Run Perceptron on Setosa and Virginica
-    X_sv, y_sv = load_data_setosa_virginica('iris.txt')
+    X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-virginica')
     perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
     perceptron_sv.fit(X_sv, y_sv)
     predictions_sv = perceptron_sv.predict(X_sv)

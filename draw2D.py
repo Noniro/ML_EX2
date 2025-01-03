@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from perceptron import load_data_setosa_versicolor, Perceptron, calculate_max_margin_brute_force, \
-    load_data_setosa_virginica
-from Q3_Adaboost import split_data_versicolor_virginica, generate_hypothesis_set, adaboost, hypothesis_predict
+from perceptron import Perceptron, calculate_max_margin_brute_force, load_data_from_2_classes
+from Q3_Adaboost import run_experiment, hypothesis_predict, load_versicolor_virginica, train_test_split, generate_hypotheses, adaboost_train
 
 
 def plot_perceptron_decision_boundary(X, y, weights, bias, title):
@@ -47,7 +46,7 @@ if __name__ == "__main__":
 
     if choice == '1':
         # Example usage with Setosa and Versicolor
-        X_sv, y_sv = load_data_setosa_versicolor('iris.txt')
+        X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-versicolor')
         perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
         perceptron_sv.fit(X_sv, y_sv)
 
@@ -59,7 +58,7 @@ if __name__ == "__main__":
         plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, true_bias, "True Maximum Margin Decision Boundary")
 
         # Example usage with Setosa and Virginica
-        X_sv, y_sv = load_data_setosa_virginica('iris.txt')
+        X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-virginica')
         perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
         perceptron_sv.fit(X_sv, y_sv)
 
@@ -69,11 +68,46 @@ if __name__ == "__main__":
         # Calculate and plot true maximum margin decision boundary
         true_max_margin_sv, true_weights, true_bias = calculate_max_margin_brute_force(X_sv, y_sv)
         plot_perceptron_decision_boundary(X_sv, y_sv, true_weights, true_bias, "True Maximum Margin Decision Boundary")
+
     elif choice == '2':
-        X_train, X_test, y_train, y_test = split_data_versicolor_virginica('iris.txt')
-        hypotheses = generate_hypothesis_set(X_train, y_train)
-        classifiers, alphas = adaboost(X_train, y_train, hypotheses, n_classifiers=8)
+
+        file_path = 'iris.txt'
+
+        train_errors, test_errors = run_experiment(file_path, n_runs=100, n_classifiers=8)
+
+        # Plot average training and test errors
+
+        plt.plot(range(1, 9), train_errors, label='Training Error')
+
+        plt.plot(range(1, 9), test_errors, label='Test Error')
+
+        plt.xlabel('Number of Classifiers')
+
+        plt.ylabel('Error')
+
+        plt.title('AdaBoost Training and Test Errors')
+
+        plt.legend()
+
+        plt.show()
+
+        # Load data for plotting decision boundaries
+
+        X, y = load_versicolor_virginica(file_path)
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+        # Generate hypotheses and train AdaBoost
+
+        hypotheses = generate_hypotheses(X_train, y_train)
+
+        classifiers, alphas = adaboost_train(X_train, y_train, hypotheses, n_classifiers=8)
+
+        # Plot decision boundaries for H1 to H8
+
         for k in range(1, 9):
+
             plot_decision_boundary(classifiers[:k], alphas[:k], X_train, y_train, f'H{k} Decision Boundary')
-    else:
-        print("Invalid choice")
+
+        else:
+            print("Invalid choice")

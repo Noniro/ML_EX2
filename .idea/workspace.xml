@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2de278b9-0daf-4e3c-a6db-4291b192d372" name="Changes" comment="hi">
+    <list default="true" id="2de278b9-0daf-4e3c-a6db-4291b192d372" name="Changes" comment="2 and 3 almost fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Q3_Adaboost.py" beforeDir="false" afterPath="$PROJECT_DIR$/Q3_Adaboost.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/draw2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/draw2D.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/perceptron.py" beforeDir="false" afterPath="$PROJECT_DIR$/perceptron.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,28 +51,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Q3_Adaboost.executor": "Run",
-    "Python.draw2D.executor": "Run",
-    "Python.perceptron.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "yuval",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Q3_Adaboost.executor&quot;: &quot;Run&quot;,
+    &quot;Python.draw2D.executor&quot;: &quot;Run&quot;,
+    &quot;Python.perceptron.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;yuval&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\HP\PycharmProjects\ML_EX2" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Q3_Adaboost">
+  <component name="RunManager" selected="Python.draw2D">
     <configuration name="Q3_Adaboost" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ML_EX2" />
       <option name="ENV_FILES" value="" />
@@ -143,10 +144,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.draw2D" />
+        <item itemvalue="Python.Q3_Adaboost" />
+        <item itemvalue="Python.perceptron" />
         <item itemvalue="Python.Q3_Adaboost" />
         <item itemvalue="Python.draw2D" />
-        <item itemvalue="Python.perceptron" />
-        <item itemvalue="Python.perceptron" />
       </list>
     </recent_temporary>
   </component>
@@ -170,6 +172,7 @@
       <workItem from="1734963211827" duration="2800000" />
       <workItem from="1735458818858" duration="8393000" />
       <workItem from="1735548050430" duration="7969000" />
+      <workItem from="1735895984713" duration="13712000" />
     </task>
     <task id="LOCAL-00001" summary="hi">
       <option name="closed" value="true" />
@@ -179,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734966698100</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="2 and 3 almost fix">
+      <option name="closed" value="true" />
+      <created>1735665942170</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1735665942170</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,11 +199,12 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
     <MESSAGE value="hi" />
-    <option name="LAST_COMMIT_MESSAGE" value="hi" />
+    <MESSAGE value="2 and 3 almost fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="2 and 3 almost fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ML_EX2$draw2D.coverage" NAME="draw2D Coverage Results" MODIFIED="1735665455152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ML_EX2$Q3_Adaboost.coverage" NAME="Q3_Adaboost Coverage Results" MODIFIED="1735665609529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ML_EX2$perceptron.coverage" NAME="perceptron Coverage Results" MODIFIED="1735548481177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML_EX2$Q3_Adaboost.coverage" NAME="Q3_Adaboost Coverage Results" MODIFIED="1735945219777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML_EX2$draw2D.coverage" NAME="draw2D Coverage Results" MODIFIED="1735945433745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ML_EX2$perceptron.coverage" NAME="perceptron Coverage Results" MODIFIED="1735901292141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
