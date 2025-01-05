@@ -7,61 +7,181 @@ from itertools import combinations
 # in the iris.txt:
 # X - axis is the second feature
 # Y - axis is the third feature
+from sklearn import svm
+
+from itertools import combinations
+import numpy as np
+import math
+
+
+def calculate_max_margin_brute_force3(x: np.ndarray, y: np.ndarray) -> (float, tuple):
+    """
+    find the true maximum margin (not estimated) between the two classes.
+    we will find this with brute force:
+    iterate over all sets of 3 points - that points will define a line that can separate the two classes.
+    check if the current hyperplane is valid (i.e. all points are on the correct side of the hyperplane).
+    calculate the margin for the current hyperplane.
+    keep track of the maximum margin found, and return it.
+
+    :param x: Feature.
+    :param y: Labels.
+    :return: Maximum margin and best_weights (slope and intercept).
+    """
+    max_margin = 0
+    best_weights = (0, 0)  # (slope, intercept)
+
+    for i, j, k in combinations(range(len(x)), 3):
+        if y[i] == y[j] == y[k]:
+            continue
+
+        a, b, c = x[i], x[j], x[k]
+
+        if y[i] == y[j]:
+            p_1, p_2, p_3 = a, b, c
+        elif y[i] == y[k]:
+            p_1, p_2, p_3 = a, c, b
+        else:
+            p_1, p_2, p_3 = b, c, a
+
+        if p_1[0] == p_2[0]:
+            slope = 0
+        else:
+            slope = (p_1[1] - p_2[1]) / (p_1[0] - p_2[0])
+
+        dist_p1_p3 = math.sqrt((p_1[0] - p_3[0]) ** 2 + (p_1[1] - p_3[1]) ** 2)
+        dist_p2_p3 = math.sqrt((p_2[0] - p_3[0]) ** 2 + (p_2[1] - p_3[1]) ** 2)
+        middle = [(p_1[0] + p_3[0]) / 2, (p_1[1] + p_3[1]) / 2] if dist_p1_p3 < dist_p2_p3 else [(p_2[0] + p_3[0]) / 2, (p_2[1] + p_3[1]) / 2]
+
+        line = [slope, middle[1] - slope * middle[0]]
+
+        valid = True
+        for p in range(len(x)):
+            y_line = line[0] * x[p][0] + line[1]
+            if y_line < x[p][1] and y[p] == 1:
+                valid = False
+                break
+            if y_line > x[p][1] and y[p] == -1:
+                valid = False
+                break
+
+        if not valid:
+            continue
+
+        margin = float(abs(line[0] * p_3[0] - p_3[1] + line[1]) / math.sqrt(line[0] ** 2 + 1))
+        if margin > max_margin:
+            max_margin = margin
+            best_weights = (line[0], line[1])
+
+    for i, j in combinations(range(len(x)), 2):
+        if y[i] == y[j]:
+            continue
+
+        p1, p2 = x[i], x[j]
+        middle = [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
+
+        valid = True
+        for p in range(len(x)):
+            if x[p][0] > middle[0] and y[p] == 1:
+                valid = False
+                break
+            if x[p][0] < middle[0] and y[p] == -1:
+                valid = False
+                break
+
+        if not valid:
+            continue
+
+        margin = abs(p2[0] - p1[0]) / 2
+        if margin > max_margin:
+            max_margin = margin
+            best_weights = (0, middle[0])  # vertical line, slope = 0, intercept = x-coordinate of middle
+
+    return max_margin, best_weights
+def calculate_max_margin_brute_force2(data, labels):
+    max_margin = 0
+    best_weights = None
+
+    # Convert labels if needed (assuming Setosa is 1, others are -1)
+    y = np.where(labels == 'Setosa', 1, -1)
+
+    # Try different angles for the hyperplane through origin
+    for theta in np.linspace(0, 2 * np.pi, 1000):
+        # Create unit weight vector
+        w = np.array([np.cos(theta), np.sin(theta)])
+
+        # Check classification and find minimum margin
+        correct_classification = True
+        min_margin = float('inf')
+
+        for i in range(len(data)):
+            # Calculate signed distance from point to hyperplane
+            distance = np.dot(w, data[i]) * y[i]
+
+            if distance <= 0:  # Misclassification
+                correct_classification = False
+                break
+
+            min_margin = min(min_margin, distance)
+
+        if correct_classification and min_margin > max_margin:
+            max_margin = min_margin
+            best_weights = w
+
+    return max_margin, best_weights
+
+def SVM(data, labels):
+    # יוצרים מודל SVM עם Kernel לינארי
+    model = svm.SVC(kernel='linear', C=1)
+
+    # מתאים את המודל לנתונים
+    model.fit(data, labels)
+
+    # חישוב הווקטור של ה-weight
+    weights = model.coef_[0]
+    # חישוב ה-margin (ההפוך למינימום המרחק)
+    margin = 1 / np.linalg.norm(weights)
+
+    return margin, weights
 
 
 def calculate_max_margin_brute_force(data, labels):
     max_margin = 0
     best_weights = None
 
-    # נבצע חיפוש בין כל זוגות נקודות מאותו class
     for i, j in combinations(range(len(data)), 2):
         if labels[i] != labels[j]:
-            continue  # נתמקד רק בנקודות מאותו class
+            continue
 
-        # הנקודות מאותו class
         point1, point2 = data[i], data[j]
-
-        # וקטור שמחבר את שתי הנקודות
         weights = point2 - point1
-
-        # נחשב את האמצע בין שתי הנקודות
         midpoint = (point1 + point2) / 2
-
-        # רשימת הנקודות מהמחלקה השנייה
         other_class_points = [k for k in range(len(data)) if labels[k] != labels[i]]
 
         for k in other_class_points:
             point3 = data[k]
-
-            # חישוב הווקטור שמחבר את האמצע לנקודה השלישית
             shifted_weights = midpoint - point3
-
-            # הזזת הווקטור כך שיעבור דרך האמצע
             final_weights = weights + shifted_weights
 
-            # בדיקה אם כל הנקודות מסווגות נכון
+            # Check classification
             correct_classification = True
             for m in range(len(data)):
                 point = data[m]
                 classification = np.dot(final_weights, point)
-
-                # נקודות מה-class הראשון צריכות להיות חיוביות
-                if labels[m] == labels[i] and classification <= 0:
-                    correct_classification = False
-                    break
-                # נקודות מה-class השני צריכות להיות שליליות
-                elif labels[m] != labels[i] and classification > 0:
+                if (labels[m] == labels[i] and classification <= 0) or \
+                        (labels[m] != labels[i] and classification > 0):
                     correct_classification = False
                     break
 
-            # חישוב השוליים
             if correct_classification:
-                # חישוב ה-margin לפי המרחק בין ההיפר-מישור לנקודות
-                margin = np.min(
-                    [np.abs(np.dot(final_weights, data[n])) for n in range(len(data))]
-                )
+                # Calculate true geometric margin
+                weight_norm = np.linalg.norm(final_weights)
+                if weight_norm == 0:
+                    continue
 
-                # עדכון ה-margin המקסימלי
+                distances = [np.abs(np.dot(final_weights, data[n])) / weight_norm
+                             for n in range(len(data))]
+                margin = np.min(distances)
+
                 if margin > max_margin:
                     max_margin = margin
                     best_weights = final_weights
@@ -156,7 +276,7 @@ if __name__ == "__main__":
     def calculate_perceptron_margin(X, y, weights):
         margins = []
         for i in range(len(X)):
-            margin = np.dot(weights, X[i]) / np.linalg.norm(weights)
+            margin = abs(np.dot(weights, X[i]) / np.linalg.norm(weights))
             margins.append(margin)
         return min(margins)
 
@@ -171,9 +291,9 @@ if __name__ == "__main__":
     print("Final weights vector:", perceptron_sv.weights)
     print("Number of mistakes:", perceptron_sv.mistakes)
     true_max_margin_sv, _ = calculate_max_margin_brute_force(X_sv, y_sv)
-    # perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights)
     print("True maximum margin:", true_max_margin_sv)
-    # print("Perceptron margin:", perceptron_margin_sv)
+    print("Perceptron margin:", perceptron_margin_sv)
 
     # Run Perceptron on Setosa and Virginica
     X_sv, y_sv = load_data_setosa_virginica('iris.txt')
@@ -185,6 +305,6 @@ if __name__ == "__main__":
     print("Final weights vector:", perceptron_sv.weights)
     print("Number of mistakes:", perceptron_sv.mistakes)
     true_max_margin_sv, _ = calculate_max_margin_brute_force(X_sv, y_sv)
-    # perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights)
     print("True maximum margin:", true_max_margin_sv)
-    # print("Perceptron margin:", perceptron_margin_sv)
+    print("Perceptron margin:", perceptron_margin_sv)
