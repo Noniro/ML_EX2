@@ -117,8 +117,10 @@ class Perceptron:
         n_samples, n_features = X.shape
         self.weights = np.zeros(n_features)
         self.bias = 0
+        self.mistakes = 0
 
         for _ in range(self.n_iters):
+            mistakes_in_round = 0
             for idx, x_i in enumerate(X):
                 linear_output = np.dot(x_i, self.weights) + self.bias
                 y_predicted = np.sign(linear_output)
@@ -127,6 +129,10 @@ class Perceptron:
                     self.weights += self.learning_rate * y[idx] * x_i
                     self.bias += self.learning_rate * y[idx]
                     self.mistakes += 1
+                    mistakes_in_round += 1
+
+            if mistakes_in_round == 0:  # if no mistakes in this round, stop
+                break
 
     def predict(self, X):
         linear_output = np.dot(X, self.weights) + self.bias

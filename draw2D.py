@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from perceptron import Perceptron, calculate_max_margin_brute_force, load_data_from_2_classes
+from Q2_Perceptron import Perceptron, calculate_max_margin_brute_force, load_data_from_2_classes
 from Q3_Adaboost import run_experiment, hypothesis_predict, load_versicolor_virginica, train_test_split, generate_hypotheses, adaboost_train
 
 
