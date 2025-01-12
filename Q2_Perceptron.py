@@ -105,43 +105,33 @@ def load_data_from_2_classes(file_path, class1, class2):
 
 
 # Perceptron algorithm
-class Perceptron:
-    def __init__(self, learning_rate=0.1, n_iters=1000):
-        self.learning_rate = learning_rate
-        self.n_iters = n_iters
-        self.weights = None
-        self.bias = None
-        self.mistakes = 0
+def perceptron(X, y, n_iters=1000):
+    n_samples, n_features = X.shape
+    weights = np.zeros(n_features)  # אתחול משקולות
+    bias = 0  # אתחול הטיה
+    mistakes = 0  # ספירת טעויות כללית
 
-    def fit(self, X, y):
-        n_samples, n_features = X.shape
-        self.weights = np.zeros(n_features)
-        self.bias = 0
-        self.mistakes = 0
+    for _ in range(n_iters):
+        mistakes_in_round = 0
+        for idx, x_i in enumerate(X):
+            linear_output = np.dot(x_i, weights) + bias
+            y_predicted = 1 if linear_output > 0 else -1
 
-        for _ in range(self.n_iters):
-            mistakes_in_round = 0
-            for idx, x_i in enumerate(X):
-                linear_output = np.dot(x_i, self.weights) + self.bias
-                y_predicted = np.sign(linear_output)
+            if y[idx] * y_predicted <= 0:  # אם זו טעות
+                weights += y[idx] * x_i  # עדכון משקולות
+                bias += y[idx]  # עדכון הטיה
+                mistakes += 1
+                mistakes_in_round += 1
 
-                if y[idx] * y_predicted <= 0:
-                    self.weights += self.learning_rate * y[idx] * x_i
-                    self.bias += self.learning_rate * y[idx]
-                    self.mistakes += 1
-                    mistakes_in_round += 1
+        # עצירה מוקדמת אם אין טעויות
+        if mistakes_in_round == 0:
+            break
 
-            if mistakes_in_round == 0:  # if no mistakes in this round, stop
-                break
-
-    def predict(self, X):
-        linear_output = np.dot(X, self.weights) + self.bias
-        return np.sign(linear_output)
-
+    return weights, bias, mistakes
 
 # Main function to run the Perceptron algorithm
 if __name__ == "__main__":
-    # Function to calculate the Perceptron margin
+    # פונקציה לחישוב המרווח של הפרספטרון
     def calculate_perceptron_margin(X, y, weights, bias):
         margins = []
         for i in range(len(X)):
@@ -149,33 +139,32 @@ if __name__ == "__main__":
             margins.append(margin)
         return min(margins)
 
-
-    # Run Perceptron on Setosa and Versicolor
+    # נתונים: Setosa ו-Versicolor
     X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-versicolor')
-    perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
-    perceptron_sv.fit(X_sv, y_sv)
-    predictions_sv = perceptron_sv.predict(X_sv)
 
+    # קריאה לפונקציה המחושבת
+    weights_sv, bias_sv, mistakes_sv = perceptron(X_sv, y_sv, n_iters=1000)
+
+    # חישוב המרווחים והדפסה
     print("Setosa and Versicolor:")
-    print("Final weights vector:", perceptron_sv.weights)
-    print("Final bias:", perceptron_sv.bias)
-    print("Number of mistakes:", perceptron_sv.mistakes)
-    true_max_margin_sv, _,_, = calculate_max_margin_brute_force(X_sv, y_sv)
-    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias)
+    print("Final weights vector:", weights_sv)
+    print("Number of mistakes:", mistakes_sv)
+    true_max_margin_sv, _, _ = calculate_max_margin_brute_force(X_sv, y_sv)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, weights_sv, bias_sv)
     print("True maximum margin:", true_max_margin_sv)
     print("Perceptron margin:", perceptron_margin_sv)
 
-    # Run Perceptron on Setosa and Virginica
+    # נתונים: Setosa ו-Virginica
     X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-virginica')
-    perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
-    perceptron_sv.fit(X_sv, y_sv)
-    predictions_sv = perceptron_sv.predict(X_sv)
 
+    # קריאה לפונקציה המחושבת
+    weights_sv, bias_sv, mistakes_sv = perceptron(X_sv, y_sv, n_iters=1000)
+
+    # חישוב המרווחים והדפסה
     print("\nSetosa and Virginica:")
-    print("Final weights vector:", perceptron_sv.weights)
-    print("Final bias:", perceptron_sv.bias)
-    print("Number of mistakes:", perceptron_sv.mistakes)
-    true_max_margin_sv, _,_, = calculate_max_margin_brute_force(X_sv, y_sv)
-    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias)
+    print("Final weights vector:", weights_sv)
+    print("Number of mistakes:", mistakes_sv)
+    true_max_margin_sv, _, _ = calculate_max_margin_brute_force(X_sv, y_sv)
+    perceptron_margin_sv = calculate_perceptron_margin(X_sv, y_sv, weights_sv, bias_sv)
     print("True maximum margin:", true_max_margin_sv)
     print("Perceptron margin:", perceptron_margin_sv)

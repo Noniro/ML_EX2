@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from Q2_Perceptron import Perceptron, calculate_max_margin_brute_force, load_data_from_2_classes
+from Q2_Perceptron import perceptron, calculate_max_margin_brute_force, load_data_from_2_classes
 from Q3_Adaboost import run_experiment, hypothesis_predict, load_versicolor_virginica, train_test_split, generate_hypotheses, adaboost_train
 
 
@@ -47,11 +47,10 @@ if __name__ == "__main__":
     if choice == '1':
         # Example usage with Setosa and Versicolor
         X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-versicolor')
-        perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
-        perceptron_sv.fit(X_sv, y_sv)
+        weights_sv, bias_sv, mistakes_sv = perceptron(X_sv, y_sv, n_iters=1000)
 
         # Plot Perceptron decision boundary
-        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias, "Perceptron Decision Boundary")
+        plot_perceptron_decision_boundary(X_sv, y_sv, weights_sv, bias_sv, "Perceptron Decision Boundary")
 
         # Calculate and plot true maximum margin decision boundary
         true_max_margin_sv, true_weights, true_bias = calculate_max_margin_brute_force(X_sv, y_sv)
@@ -59,11 +58,10 @@ if __name__ == "__main__":
 
         # Example usage with Setosa and Virginica
         X_sv, y_sv = load_data_from_2_classes('iris.txt', 'Iris-setosa', 'Iris-virginica')
-        perceptron_sv = Perceptron(learning_rate=0.1, n_iters=1000)
-        perceptron_sv.fit(X_sv, y_sv)
+        weights_sv, bias_sv, mistakes_sv = perceptron(X_sv, y_sv, n_iters=1000)
 
         # Plot Perceptron decision boundary
-        plot_perceptron_decision_boundary(X_sv, y_sv, perceptron_sv.weights, perceptron_sv.bias, "Perceptron Decision Boundary")
+        plot_perceptron_decision_boundary(X_sv, y_sv, weights_sv, bias_sv, "Perceptron Decision Boundary")
 
         # Calculate and plot true maximum margin decision boundary
         true_max_margin_sv, true_weights, true_bias = calculate_max_margin_brute_force(X_sv, y_sv)
